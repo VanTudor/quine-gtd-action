@@ -1,7 +1,4 @@
 {
-  "include": ["src/**/*",
-    "./package.json"
-  ],
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",

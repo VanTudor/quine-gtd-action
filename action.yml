@@ -1,0 +1,12 @@
+name: Quine Action for Git Things Done
+description: |
+  Sends you open-source repos that you might be interested in contributing to,
+  based on your previous GitHub activity
+inputs:
+  token:
+    description: Usually `secrets.GITHUB_TOKEN`.
+    default: ${{ github.token }}
+runs:
+  using: docker
+  image: Dockerfile
+  # ^^ because we want node 16 so we can use modern features

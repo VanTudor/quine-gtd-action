@@ -27,7 +27,6 @@ export function decodeJWT(jwt: string): IAuth0DecodedJWT {
   }
 }
 
-
 export async function pollUntil<T>(
   expiresIn: number,
   intervalMillis: number,
@@ -50,14 +49,4 @@ export async function pollUntil<T>(
     codeExpired = startTime + expiresIn < time2;
   }
   return res;
-}
-
-export function encryptToken(unencryptedToken: string): string {
-  const key = "base64-encoded-public-key";
-
-  const messageBytes = Buffer.from(unencryptedToken);
-  const keyBytes = Buffer.from(key, 'base64');
-
-  const encryptedBytes = sodium.seal(messageBytes, keyBytes);
-  return Buffer.from(encryptedBytes).toString('base64');
 }

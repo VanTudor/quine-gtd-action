@@ -1,6 +1,5 @@
 import * as github from '@actions/github';
 import { getInput } from '@actions/core';
-import {encryptToken} from "./utils";
 
 export class GitHubInteraction {
   public static quineAccessTokenSecretName: string = 'QUINE_ACCESS_TOKEN';
