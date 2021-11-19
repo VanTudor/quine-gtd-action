@@ -12,16 +12,16 @@ export class Authentication {
   }
 
   public async getQuineToken() {
-    console.log('Getting access token secret or checking whether it\'s missing exists.')
+    console.log('Getting access token secret or checking whether it\'s missing.')
     let storedToken = await this.gitHubInteraction.getQuineAccessToken();
-    console.log('Finished getting access token secret or checking whether it\'s missing exists.')
+    console.log('Finished getting access token secret or checking whether it\'s missing.')
     const now = Date.now();
-    if (storedToken) {
+    if (storedToken && storedToken.length > 1) {
       const decodedToken = decodeJWT(storedToken);
       const expiredToken = now - decodedToken.exp < 0;
       if (expiredToken) {
         const refreshToken = await this.gitHubInteraction.getQuineRefreshToken();
-        if (refreshToken) {
+        if (refreshToken && refreshToken.length > 1) {
           return await this.handleExpiredTokenFlow(refreshToken);
         } // missing refresh token. Shouldn't end up here unless the user manually deleted the refresh token stored in GitHub
         return await this.handleDeviceActivationFlow();
