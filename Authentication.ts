@@ -14,6 +14,7 @@ export class Authentication {
   public async getQuineToken() {
     console.log('Getting access token secret or checking whether it\'s missing exists.')
     let storedToken = await this.gitHubInteraction.getQuineAccessToken();
+    console.log('Finished getting access token secret or checking whether it\'s missing exists.')
     const now = Date.now();
     if (storedToken) {
       const decodedToken = decodeJWT(storedToken);
