@@ -16,7 +16,8 @@ export class GitHubInteraction {
     }
     this.owner = owner;
     this.repo = repo;
-    const token = getInput('token')!
+    const token = getInput('token');
+    console.log('GITHUB TOKEN LENGTH: ', token.length);
     this.octokit = github.getOctokit(token);
   }
   public async getQuineAccessToken(): Promise<string | null> {
