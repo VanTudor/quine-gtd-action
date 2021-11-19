@@ -30,10 +30,8 @@ import { getInput } from '@actions/core';
 // }
 
 
-async function main () {
-  const auth = new Authentication();
-  const quineAccessToken = await auth.getQuineToken();
-  const quineAPI = new QuineAPI(quineAccessToken);
-  const data = await quineAPI.getRepoRecommendations();
-  console.log('DATA!!!!', data);
-}
+const auth = new Authentication();
+const quineAccessToken = await auth.getQuineToken();
+const quineAPI = new QuineAPI(quineAccessToken);
+const data = await quineAPI.getRepoRecommendations();
+console.log('DATA!!!!', data);
