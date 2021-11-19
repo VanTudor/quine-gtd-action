@@ -8,5 +8,4 @@ interface IAuth0DecodedJWT {
 }
 export declare function decodeJWT(jwt: string): IAuth0DecodedJWT;
 export declare function pollUntil<T>(expiresIn: number, intervalMillis: number, method: () => Promise<T>, checkShouldStopPolling: (p: T) => boolean): Promise<T>;
-export declare function encryptToken(unencryptedToken: string): string;
 export {};
