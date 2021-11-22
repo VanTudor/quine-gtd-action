@@ -6,7 +6,10 @@ inputs:
   token:
     description: Usually `secrets.GITHUB_TOKEN`
     default: ${{ github.token }}
-    required: false
+    required: true
+  quine_gh_pat:
+    description: "PAT. Used to store Quine API access tokens in your repo's secrets. Scope needed: repo: all and org: read"
+    required: true
 runs:
   using: docker
   image: Dockerfile

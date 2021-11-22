@@ -17,8 +17,10 @@ export class GitHubInteraction {
     this.owner = owner;
     this.repo = repo;
     const token = getInput('token');
+    const PAT = getInput('quine_gh_pat');
     console.log('GITHUB TOKEN LENGTH: ', token.length);
-    this.octokit = github.getOctokit(token);
+    console.log('GITHUB PAT LENGTH: ', PAT.length);
+    this.octokit = github.getOctokit(PAT);
   }
   public async getQuineAccessToken(): Promise<string | null> {
     const res = await this.octokit.rest.actions.getRepoSecret({
