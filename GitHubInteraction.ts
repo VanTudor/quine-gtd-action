@@ -73,4 +73,13 @@ export class GitHubInteraction {
     }
     throw new Error('No repo public key id could be found. Possible misuse of this method. Did you forget to run GitHubInteraction.init()?')
   }
+
+  public async postComment(commentText: string) {
+    const new_comment = await octokit.rest.issues.createComment({
+      owner: this.owner,
+      repo: this.repo,
+      issue_number: today,
+      body: comment.body ?? '',
+    });
+  }
 }
