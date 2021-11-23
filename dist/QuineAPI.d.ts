@@ -1,7 +1,7 @@
 export declare class QuineAPI {
     private bearerToken;
     constructor(bearerToken: string);
-    getOnboardingInfo(userId: string): Promise<void>;
+    getOnboardingInfo(): Promise<any>;
     getRepoRecommendations(): Promise<any>;
     private getHeaders;
 }
