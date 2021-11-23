@@ -1,5 +1,6 @@
 import * as github from '@actions/github';
 import { getInput } from '@actions/core';
+import {encryptGHSecret} from "./utils";
 
 export class GitHubInteraction {
   public static quineAccessTokenSecretName: string = 'QUINE_ACCESS_TOKEN';
@@ -7,51 +8,69 @@ export class GitHubInteraction {
   private octokit;
   private readonly owner: string;
   private readonly repo: string;
+  private repoPublicKey?: string;
+  private repoPublicKeyID?: string;
+  public initiated: boolean;
 
   constructor() {
-    const slug = process.env.GITHUB_REPOSITORY!
+    this.initiated = false;
+    const slug = process.env.GITHUB_REPOSITORY || "VanTudor/gtd";
     const [owner, repo] = slug.split('/');
     if (!owner || !repo) {
       throw new Error('Cannot interact with GitHub. Missing owner and repo params.');
     }
     this.owner = owner;
     this.repo = repo;
-    const token = getInput('token');
     const PAT = getInput('quine_gh_pat');
-    console.log('GITHUB TOKEN LENGTH: ', token.length);
+    if (!PAT) {
+      throw new Error("Missing Personal Access Token. Make sure you that:\n" +
+        "- you have a QUINE_GH_PAT secret added to your gtd repo's secrets page. It should contain your PAT with repo: all and org: read scopes.\n" +
+        "- you have edited your gtd porter.yml file to supply the secret as an input to this action/job. See README.md for more details.");
+    }
     console.log('GITHUB PAT LENGTH: ', PAT.length);
     this.octokit = github.getOctokit(PAT);
   }
-  public async getQuineAccessToken(): Promise<string | null> {
-    const res = await this.octokit.rest.actions.getRepoSecret({
+  public async getInstance(): Promise<this> {
+    console.log('GETTING INSTANCE');
+    if (this.initiated) {
+      console.log('RETURNING THIS');
+      return this;
+    }
+    console.log('GETTING REPO PK');
+    const pk = await this.octokit.rest.actions.getRepoPublicKey({
       owner: this.owner,
       repo: this.repo,
-      secret_name: GitHubInteraction.quineAccessTokenSecretName,
     });
-    return res.data.name;
+    console.log('GOT REPO PK');
+    this.repoPublicKey = pk.data.key;
+    this.repoPublicKeyID = pk.data.key_id;
+    this.initiated = true;
+    return this;
   }
   public async setQuineAccessToken(quineAccessToken: string): Promise<void> {
-    await this.octokit.rest.actions.createOrUpdateRepoSecret({
-      owner: this.owner,
-      repo: this.repo,
-      secret_name: "QUINE_ACCESS_TOKEN",
-      encrypted_value: quineAccessToken
-    });
-  }
-  public async getQuineRefreshToken(): Promise<string | null> {
-    const res = await this.octokit.rest.actions.getRepoSecret({
-      owner: this.owner,
-      repo: this.repo,
-      secret_name: GitHubInteraction.quineRefreshTokenSecretName,
-    });
-    return res.data.name;
+    if (this.repoPublicKey && this.repoPublicKeyID) {
+      await this.octokit.rest.actions.createOrUpdateRepoSecret({
+        owner: this.owner,
+        repo: this.repo,
+        key_id: this.repoPublicKeyID,
+        secret_name: "QUINE_ACCESS_TOKEN",
+        encrypted_value: encryptGHSecret(this.repoPublicKey, quineAccessToken),
+      });
+      return;
+    }
+    throw new Error('No repo public key id could be found. Possible misuse of this method. Did you forget to run GitHubInteraction.init()?')
   }
   public async setQuineRefreshToken(quineRefreshToken: string): Promise<void> {
-    await this.octokit.rest.actions.createOrUpdateRepoSecret({
-      owner: this.owner,
-      repo: this.repo,
-      secret_name: GitHubInteraction.quineRefreshTokenSecretName,
-      encrypted_value: quineRefreshToken
-    });
+    if (this.repoPublicKey && this.repoPublicKeyID) {
+      await this.octokit.rest.actions.createOrUpdateRepoSecret({
+        owner: this.owner,
+        repo: this.repo,
+        secret_name: GitHubInteraction.quineRefreshTokenSecretName,
+        key_id: this.repoPublicKeyID,
+        encrypted_value: encryptGHSecret(this.repoPublicKey, quineRefreshToken),
+      });
+      return;
+    }
+    throw new Error('No repo public key id could be found. Possible misuse of this method. Did you forget to run GitHubInteraction.init()?')
   }
 }

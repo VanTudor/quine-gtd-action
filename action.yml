@@ -10,6 +10,12 @@ inputs:
   quine_gh_pat:
     description: "PAT. Used to store Quine API access tokens in your repo's secrets. Scope needed: repo: all and org: read"
     required: true
+  quine_access_token:
+    description: "Access token used to query Quine's API for you recommended repos."
+    required: false
+  quine_refresh_token:
+    description: "Refresh token that will be exchanged for a Quine access token after the latter expires."
+    required: false
 runs:
   using: docker
   image: Dockerfile

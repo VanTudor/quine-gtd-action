@@ -10,7 +10,8 @@
  * 4. Use QAt to call the Quine API
  */
 import { config } from './config';
-import {pollUntil} from "./utils";
+import { pollUntil } from "./utils";
+import { getInput } from "@actions/core";
 const fetch = require('node-fetch');
 // const auth0Hostname = 'https://quine.eu.auth0.com';
 //
@@ -60,8 +61,18 @@ interface IAuth0TokensResponse {
 }
 export class Auth0Auth {
   public deviceCode?: string;
-  public tokenPollingInterval?: number;
-  constructor() {}
+  public quineRefreshToken?: string;
+  public quineAccessToken?: string;
+  public initiated: boolean;
+  constructor() {
+    //quine_access_token
+    this.initiated = false;
+    this.quineAccessToken = getInput('quine_access_token');
+    this.quineRefreshToken = getInput('quine_refresh_token');
+  }
+  public async getInstance() {
+
+  }
 
   public async handleAuth() {
     if (!this.deviceCode) {
@@ -73,7 +84,7 @@ export class Auth0Auth {
     const params = new URLSearchParams();
     params.append('client_id', config.auth0ClientId);
     params.append('audience', config.audience);
-    params.append('scope', 'profile email openid');
+    params.append('scope', 'profile email openid offline_access');
     const response = await fetch(config.deviceActivationURI, { method: 'POST', body: params });
     const data = await response.json() as IAuth0ReqDeviceCodeResponse;
     console.log("requestDeviceCode response: ", JSON.stringify(data));
@@ -104,7 +115,7 @@ export class Auth0Auth {
 
     const response = await fetch(config.tokenURI, { method: 'POST', body: params });
     const res = await response.json();
-    console.log("Request tokens response: ", res);
+    console.log("Got request tokens response: ");
     if (res.access_token) {
       return {
         refreshToken: res.refresh_token,
@@ -124,14 +135,13 @@ export class Auth0Auth {
   }
 
   public async pollForTokens(deviceCode: string, expiresIn: number, tokenPollingIntervalSeconds: number): Promise<IAuth0TokensResponse> {
-    if (this.tokenPollingInterval) {
+    if (tokenPollingIntervalSeconds) {
       const res = await pollUntil<IAuth0TokensResponse | null>(
-        expiresIn,
+        expiresIn * 1000,
         tokenPollingIntervalSeconds * 1000,
         () => this.requestTokens(deviceCode),
-        (res) => res === null
+        (res) => res !== null
       );
-      console.log(res);
       if (res !== null) {
         return res;
       }

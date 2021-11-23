@@ -15,7 +15,6 @@ export function decodeJWT(jwt: string): IAuth0DecodedJWT {
     throw new Error('Error while decoding JWT. Invalid format. Possible OAuth authentication issue.');
   }
   const decoded = Buffer.from(tokenDecodablePart, 'base64').toString();
-  console.log('Decoded JWT: ', decoded);
   const parsedJWT = JSON.parse(decoded);
   return {
     iss: parsedJWT.iss,
@@ -28,7 +27,7 @@ export function decodeJWT(jwt: string): IAuth0DecodedJWT {
 }
 
 export async function pollUntil<T>(
-  expiresIn: number,
+  expiresInMillis: number,
   intervalMillis: number,
   method: () => Promise<T>,
   checkShouldStopPolling: (p: T) => boolean
@@ -37,16 +36,28 @@ export async function pollUntil<T>(
   let time1 = Date.now();
   let time2 = time1 + intervalMillis;
   let res = await method();
-  let codeExpired = startTime + expiresIn > Date.now();
-  while (codeExpired && !checkShouldStopPolling(res)) {
-    // console.log('!!', time2-time1);
-    if (time2 - time1 > intervalMillis) {
-      // console.log(time2-time1, '>', intervalMillis);
+  let codeExpired = startTime + expiresInMillis < Date.now();
+  while (!codeExpired && !checkShouldStopPolling(res)) {
+    if (time2 - time1 > intervalMillis + 500) {
       res = await method();
       time1 = time2;
     }
     time2 = Date.now();
-    codeExpired = startTime + expiresIn < time2;
+    codeExpired = startTime + expiresInMillis < time2;
   }
   return res;
+}
+
+const crypto = require('crypto');
+const { Octokit } = require("@octokit/core");
+
+export function encryptGHSecret (publicKey: string, value: string){
+  const messageBytes = Buffer.from(value);
+  const keyBytes = Buffer.from(publicKey, 'base64');
+
+// Encrypt using LibSodium.
+  const encryptedBytes = sodium.seal(messageBytes, keyBytes);
+
+  // Base64 the encrypted secret
+  return Buffer.from(encryptedBytes).toString('base64');
 }

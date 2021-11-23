@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 export class QuineAPI {
   constructor(private bearerToken: string) {}
 
@@ -16,9 +17,10 @@ export class QuineAPI {
 
   public async getRepoRecommendations(): Promise<any> {
     const url = 'https://quine.sh/recommendations';
-    return await fetch(url, {
+    const res = await fetch(url, {
       headers: this.getHeaders(true),
     });
+    return res.json();
   }
 
   private getHeaders(needsAuth: boolean) {
