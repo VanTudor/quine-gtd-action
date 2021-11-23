@@ -20,6 +20,7 @@ export class Authentication {
     const storedrRefreshToken = this.auth0Auth.quineRefreshToken || null;
 
     console.log('Finished getting access token secret or checking whether it\'s missing.');
+
     const now = Date.now();
     if (storedAccessToken && storedAccessToken.length > 1) {
       const decodedToken = decodeJWT(storedAccessToken);
