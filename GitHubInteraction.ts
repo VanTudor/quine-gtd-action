@@ -1,5 +1,6 @@
 import * as github from '@actions/github';
-import {encryptGHSecret} from "./utils";
+import { encryptGHSecret } from "./utils";
+import { getInput } from "@actions/core";
 
 export class GitHubInteraction {
   public static quineAccessTokenSecretName: string = 'QUINE_ACCESS_TOKEN';
