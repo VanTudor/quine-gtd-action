@@ -1,5 +1,4 @@
 import * as github from '@actions/github';
-import { getInput } from '@actions/core';
 import {encryptGHSecret} from "./utils";
 
 export class GitHubInteraction {

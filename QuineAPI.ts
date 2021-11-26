@@ -1,6 +1,5 @@
 import { IAuth0UserInfo } from "./Auth0Auth";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 
 export interface IQuineRegisterUserResponse {
   id: string;
@@ -15,11 +14,12 @@ export interface IRepoRecommendationGroup {
   issue_ids: string[];
   recommendation_group: string;
 }
+
 export interface IRepoStatistics {
   prs_trend: number;
   engaged_devs: number;
   num_issues_for_you: number;
-};
+}
 
 export interface IRepoLanguage {
   name: string;
@@ -75,21 +75,6 @@ export class QuineAPI {
     // return (await response.json() as IQuineRegisterUserResponse).id;
     return r.id;
   }
-  //
-  // public async getOnboardingInfo(userId: string) {
-  //   const url = 'https://cosmos-dev.quine.sh/api/whoami/user/register/';
-  //   const response = await fetch(url, {
-  //     method: 'PUT',
-  //     headers: this.getHeaders(true),
-  //     body: JSON.stringify({
-  //       "user_id": userId
-  //     }),
-  //   });
-  //   const k = await response.json();
-  //   console.log(JSON.stringify(k));
-  //   console.log('------------------------getOnboardingInfo------------------------');
-  //   return k;
-  // }
   public async getRepoRecommendationGroups(userId: number) {
     const url = 'https://cosmos-dev.quine.sh/api/scout/recommendation/';
     const res = await fetch(url, {
@@ -109,7 +94,7 @@ export class QuineAPI {
       body: JSON.stringify({
         "user_id": userId,
         "refresh": true,
-        "recommendation_groups": recommendationGroups, // [{"group": "all"}, {"group": "c"}, {"group": "c++"}, {"group": "javascript"}, {"group": "typescript"}]
+        "recommendation_groups": recommendationGroups,
       })
     });
     const k = await res.json();
