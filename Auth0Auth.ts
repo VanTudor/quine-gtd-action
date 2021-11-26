@@ -59,6 +59,17 @@ interface IAuth0TokensResponse {
   refreshToken: TRefreshToken;
   expiresIn: string;
 }
+
+export interface IAuth0UserInfo {
+  email: string;
+  email_verified: boolean;
+  name: string;
+  nickname: string;
+  picture: string;
+  sub: string;
+  updated_at: string;
+}
+
 export class Auth0Auth {
   public deviceCode?: string;
   public quineRefreshToken?: string;
@@ -67,17 +78,23 @@ export class Auth0Auth {
   constructor() {
     //quine_access_token
     this.initiated = false;
-    this.quineAccessToken = getInput('quine_access_token');
-    this.quineRefreshToken = getInput('quine_refresh_token');
-  }
-  public async getInstance() {
-
+    this.quineAccessToken = getInput('quine-access-token');
+    this.quineRefreshToken = getInput('quine-refresh-token');
   }
 
-  public async handleAuth() {
-    if (!this.deviceCode) {
-
-    }
+  public async getUserInfo(bearerToken: string): Promise<IAuth0UserInfo> {
+    const response = await fetch('https://dev-6efvmm67.eu.auth0.com/userinfo', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${bearerToken}`,
+      }
+    });
+    // const r = await response.json();
+    // console.log("ALOOO");
+    // console.log(r);
+    // console.log("ALOOO");
+    return response.json() as IAuth0UserInfo;
   }
 
   public async requestDeviceCode(): Promise<IReqDeviceCodeResponse> {
@@ -87,7 +104,6 @@ export class Auth0Auth {
     params.append('scope', 'profile email openid offline_access');
     const response = await fetch(config.deviceActivationURI, { method: 'POST', body: params });
     const data = await response.json() as IAuth0ReqDeviceCodeResponse;
-    console.log("requestDeviceCode response: ", JSON.stringify(data));
     return {
       deviceCode: data.device_code,
       userCode: data.user_code,
@@ -99,15 +115,13 @@ export class Auth0Auth {
   }
 
    public async requestDeviceActivation(verificationURI: string, userCode: string, prePopulatedCodeURI: string) {
-    console.log(`On your computer or mobile device, go to ${verificationURI} and type in the following code:`);
-    console.log(`Or just follow the following link: ${prePopulatedCodeURI}`);
-    console.log(userCode);
+     console.log("Visit the following link to log in our sign up for a Quine account:");
+     console.log(prePopulatedCodeURI);
+     console.log(`Or go to ${verificationURI} and type in the following code: ${userCode}`);
   }
 
   public async requestTokens(deviceCode: string): Promise<IAuth0TokensResponse | null> {
-    console.log("Calling request tokens...");
-    console.log('device_code', deviceCode);
-    console.log('client_id', config.auth0ClientId);
+    console.debug("Getting request tokens...");
     const params = new URLSearchParams();
     params.append('grant_type', 'urn:ietf:params:oauth:grant-type:device_code');
     params.append('device_code', deviceCode);
@@ -115,7 +129,7 @@ export class Auth0Auth {
 
     const response = await fetch(config.tokenURI, { method: 'POST', body: params });
     const res = await response.json();
-    console.log("Got request tokens response: ");
+    console.log("Finished getting request tokens.");
     if (res.access_token) {
       return {
         refreshToken: res.refresh_token,

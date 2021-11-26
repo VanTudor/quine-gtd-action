@@ -21,27 +21,22 @@ export class GitHubInteraction {
     }
     this.owner = owner;
     this.repo = repo;
-    const PAT = getInput('quine_gh_pat');
+    const PAT = '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';// getInput('gh-pat');
     if (!PAT) {
       throw new Error("Missing Personal Access Token. Make sure you that:\n" +
         "- you have a QUINE_GH_PAT secret added to your gtd repo's secrets page. It should contain your PAT with repo: all and org: read scopes.\n" +
         "- you have edited your gtd porter.yml file to supply the secret as an input to this action/job. See README.md for more details.");
     }
-    console.log('GITHUB PAT LENGTH: ', PAT.length);
     this.octokit = github.getOctokit(PAT);
   }
   public async getInstance(): Promise<this> {
-    console.log('GETTING INSTANCE');
     if (this.initiated) {
-      console.log('RETURNING THIS');
       return this;
     }
-    console.log('GETTING REPO PK');
     const pk = await this.octokit.rest.actions.getRepoPublicKey({
       owner: this.owner,
       repo: this.repo,
     });
-    console.log('GOT REPO PK');
     this.repoPublicKey = pk.data.key;
     this.repoPublicKeyID = pk.data.key_id;
     this.initiated = true;

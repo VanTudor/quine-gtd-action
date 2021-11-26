@@ -19,5 +19,7 @@
     "preserveConstEnums": true,
     "removeComments": true,
     "strict": true,
+    "typeRoots": ["./src/@types", "./node_modules/@types"],
+    "allowSyntheticDefaultImports": true,
   }
 }

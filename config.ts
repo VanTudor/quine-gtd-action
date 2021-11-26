@@ -2,6 +2,7 @@ const prodAuth0Hostname = 'https://quine.eu.auth0.com';
 const devAuth0Hostname = 'https://dev-6efvmm67.eu.auth0.com';
 
 export const prodConfig = {
+  userInfoEndpoint: `${devAuth0Hostname}/userinfo`,
   tokenEndpoint: '/oauth/token',
   tokenURI: `${prodAuth0Hostname}/oauth/token`,
   auth0Hostname: prodAuth0Hostname,
@@ -11,6 +12,7 @@ export const prodConfig = {
 };
 
 export const devConfig = {
+  userInfoEndpoint: `${devAuth0Hostname}/userinfo`,
   tokenEndpoint: '/oauth/token',
   tokenURI: `${devAuth0Hostname}/oauth/token`,
   auth0Hostname: devAuth0Hostname,
