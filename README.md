@@ -108,7 +108,7 @@ jobs:
           publish_dir: ./public
           destination_dir: gtd
           force_orphan: true
-``
+```
 
 ## First run
 The first time you run the workflow, you'll have to log in or sign up for a Quine account. Fortunately,
