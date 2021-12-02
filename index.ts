@@ -54,7 +54,7 @@ async function main () {
     const parseRes = cronParser.parseExpression(runCron).prev();
     const currentTime = new Date();
     if (compareDates(parseRes, currentTime)) {
-      await action();
+      await action(publishIn);
       return;
     }
       console.log(`Current date ${Date.now()} doesn't match input cron "${runCron}". Skipping execution...`);
