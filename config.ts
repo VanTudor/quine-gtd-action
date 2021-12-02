@@ -7,7 +7,7 @@ const devFERoot = 'https://scout-dev.quine.sh';
 const prodFERoot = 'https://scout.quine.sh';
 
 export const prodConfig = {
-  userInfoEndpoint: `${devAuth0Hostname}/userinfo`,
+  userInfoEndpoint: `${prodAuth0Hostname}/userinfo`,
   tokenEndpoint: '/oauth/token',
   tokenURI: `${prodAuth0Hostname}/oauth/token`,
   auth0Hostname: prodAuth0Hostname,
