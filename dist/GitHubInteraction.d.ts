@@ -13,5 +13,6 @@ export declare class GitHubInteraction {
     getInstance(): Promise<this>;
     setQuineAccessToken(quineAccessToken: string): Promise<void>;
     setQuineRefreshToken(quineRefreshToken: string): Promise<void>;
+    createTicket(recommendations: IRepoInfo[]): Promise<void>;
     updateTicket(recommendations: IRepoInfo[]): Promise<void>;
 }
