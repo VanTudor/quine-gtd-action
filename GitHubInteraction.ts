@@ -3,6 +3,7 @@ import { encryptGHSecret } from "./utils";
 import { getInput } from "@actions/core";
 import { config } from "./config";
 import { IRepoInfo } from "./QuineAPI";
+import dayjs from "dayjs";
 
 export class GitHubInteraction {
   public static quineAccessTokenSecretName: string = 'QUINE_ACCESS_TOKEN';
@@ -73,6 +74,22 @@ export class GitHubInteraction {
     throw new Error('No repo public key id could be found. Possible misuse of this method. Did you forget to run GitHubInteraction.init()?')
   }
 
+  public async createTicket(recommendations: IRepoInfo[]) {
+    const body = `
+### Check out these repos recommended by [Quine](${config.quineURLs.feRoot}):
+      ${recommendations.map(rec => {
+      return '\n- [' + rec.name_with_owner + '](' + config.quineURLs.feRoot +'/' + rec.id + ')' + rec.description ? " - " + rec.description : "";
+    })}
+      `;
+    const date = dayjs(new Date()).format('YYYY-MM-DD[, ]ddd') // '25/01/2019'
+    await this.octokit.rest.issues.create({
+      owner: this.owner,
+      repo: this.repo,
+      title: `${date} Personalised repo recommendations by Quine.`,
+      body
+    })
+  }
+
   public async updateTicket(recommendations: IRepoInfo[]) {
     let body = await this.octokit.rest.issues.get({
       owner: this.owner,
@@ -81,11 +98,11 @@ export class GitHubInteraction {
     }).then(x => x.data.body);
 
     body = `
-      ${body}
-      
-      ### Check out these repos recommended by (Quine)[${config.quineURLs.feRoot}]:
+${body}
+    
+### Check out these repos recommended by [Quine](${config.quineURLs.feRoot}):
       ${recommendations.map(rec => {
-        return '\n- (' + rec.name_with_owner + ')[' + config.quineURLs.feRoot +'/' + rec.id + ']';
+      return '\n- [' + rec.name_with_owner + '](' + config.quineURLs.feRoot +'/' + rec.id + ')' + rec.description ? " - " + rec.description : "";
     })}
       `;
 

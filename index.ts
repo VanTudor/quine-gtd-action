@@ -4,7 +4,7 @@ import { getInput } from '@actions/core';
 const cronParser = require('cron-parser');
 
 
-async function action(){
+async function action(publishIn?: string){
   const auth = new Authentication();
   const quineAccessToken = await auth.getQuineAccessToken();
 
@@ -19,6 +19,16 @@ async function action(){
   const repoDetails = await quineAPI.getReposInfo(Number(quineUserId), repoRecommendations.map(repo => repo.repo_id));
   console.log('Received repos info.');
   console.log(JSON.stringify(repoDetails));
+  switch(publishIn) {
+    case "porter-ticket":
+      await auth.gitHubInteraction.updateTicket(repoDetails);
+      break;
+    case "separate-ticket":
+      await auth.gitHubInteraction.createTicket(repoDetails);
+      break;
+    default:
+      await auth.gitHubInteraction.updateTicket(repoDetails);
+  }
   await auth.gitHubInteraction.updateTicket(repoDetails);
   console.log('Posted to GitHub issue.');
 }
@@ -39,6 +49,7 @@ function compareDates(date1: Date, date2: Date) {
 
 async function main () {
   const runCron = getInput('run-cron');
+  const publishIn = getInput('publish-in');
   if (runCron) {
     const parseRes = cronParser.parseExpression(runCron).prev();
     const currentTime = new Date();
@@ -49,7 +60,7 @@ async function main () {
       console.log(`Current date ${Date.now()} doesn't match input cron "${runCron}". Skipping execution...`);
       return;
   }
-  await action();
+  await action(publishIn);
 }
 
 main();

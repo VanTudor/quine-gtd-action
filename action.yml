@@ -6,6 +6,9 @@ description: |
   Sends you open-source repos that you might be interested in contributing to,
   based on your previous GitHub activity
 inputs:
+  publish-in:
+    description: "Tells the action where to publish your repo recommendations. Valid: `separate-ticket` and `porter-ticket`. Default: `porter-ticket`"
+    required: false
   run-cron:
     description: "A cron schedule expression that tells the action when to publish your recommended repos."
     required: true
