@@ -13,20 +13,6 @@ import { config } from './config';
 import { pollUntil } from "./utils";
 import { getInput } from "@actions/core";
 const fetch = require('node-fetch');
-// const auth0Hostname = 'https://quine.eu.auth0.com';
-//
-// const deviceActivationEndpoint = '/oauth/device/code';
-// const deviceActivationURI = auth0Hostname + deviceActivationEndpoint;
-//
-// const tokenEndpoint = '/oauth/token';
-// const tokenURI = auth0Hostname + tokenEndpoint;
-//
-// const auth0ClientId = 'WhITauwih53wi382lP0wxh9f7RPQQKGR';
-// GITNFT ONE
-// const auth0Domain = 'https://quine.sh/gitnft/api';
-const auth0Domain = 'https://cosmos-dev.quine.sh/api';
-
-const apiHostname = 'https://cosmos-dev.quine.sh/api';
 
 interface IAuth0ReqDeviceCodeResponse {
   device_code: string;
@@ -83,7 +69,7 @@ export class Auth0Auth {
   }
 
   public async getUserInfo(bearerToken: string): Promise<IAuth0UserInfo> {
-    const response = await fetch('https://dev-6efvmm67.eu.auth0.com/userinfo', {
+    const response = await fetch(config.userInfoEndpoint, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
