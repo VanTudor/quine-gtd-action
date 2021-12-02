@@ -18,13 +18,13 @@ export const prodConfig = {
     feRoot: prodFERoot,
     cosmos: {
       user : {
-        register: `${devAPIURL}/cosmos/user/register/`
+        register: `${prodAPIURL}/cosmos/user/register/`
       },
     },
     scout :{
-      recommendation: `${devAPIURL}/scout/recommendation/`,
+      recommendation: `${prodAPIURL}/scout/recommendation/`,
       repositories: {
-        cardInfo: `${devAPIURL}/scout/repositories/card-info/`,
+        cardInfo: `${prodAPIURL}/scout/repositories/card-info/`,
       },
     }
   }

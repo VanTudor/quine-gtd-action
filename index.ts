@@ -18,6 +18,7 @@ async function action(){
   console.log('Received repo recommendations.');
   const repoDetails = await quineAPI.getReposInfo(Number(quineUserId), repoRecommendations.map(repo => repo.repo_id));
   console.log('Received repos info.');
+  console.log(JSON.stringify(repoDetails));
   console.log('Posted to GitHub issue.');
 }
 

@@ -17,7 +17,7 @@ export class Authentication {
     }
     console.log('Check if Quine access token is available.');
     let storedAccessToken = this.auth0Auth.quineAccessToken || null;
-    const storedrRefreshToken = this.auth0Auth.quineRefreshToken || null;
+    const storedRefreshToken = this.auth0Auth.quineRefreshToken || null;
 
     console.log('Finished getting access token secret or checking whether it\'s missing.');
 
@@ -26,8 +26,8 @@ export class Authentication {
       const decodedToken = decodeJWT(storedAccessToken);
       const expiredAccessToken = now - decodedToken.exp < 0;
       if (expiredAccessToken) {
-        if (storedrRefreshToken && storedrRefreshToken.length > 1) {
-          const refreshToken = await this.handleExpiredTokenFlow(storedrRefreshToken);
+        if (storedRefreshToken && storedRefreshToken.length > 1) {
+          const refreshToken = await this.handleExpiredTokenFlow(storedRefreshToken);
           this.auth0Auth.quineRefreshToken = refreshToken;
           return refreshToken;
         } // missing refresh token. Shouldn't end up here unless the user manually deleted the refresh token stored in GitHub
