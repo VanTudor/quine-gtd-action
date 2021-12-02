@@ -19,6 +19,7 @@ async function action(publishIn?: string){
   const repoDetails = await quineAPI.getReposInfo(Number(quineUserId), repoRecommendations.map(repo => repo.repo_id));
   console.log('Received repos info.');
   console.log(JSON.stringify(repoDetails));
+  console.log("PUBLISH IN VALUE: ", publishIn);
   switch(publishIn) {
     case "porter-ticket":
       await auth.gitHubInteraction.updateTicket(repoDetails);
@@ -29,7 +30,6 @@ async function action(publishIn?: string){
     default:
       await auth.gitHubInteraction.updateTicket(repoDetails);
   }
-  await auth.gitHubInteraction.updateTicket(repoDetails);
   console.log('Posted to GitHub issue.');
 }
 
