@@ -75,7 +75,6 @@ export class Authentication {
     }
     await ghInteractionInstance.setQuineAccessToken(newAccessTokenResponse.accessToken);
     console.log('Stored new access token as repo secret.');
-    console.log(JSON.stringify(newAccessTokenResponse));
     await ghInteractionInstance.setQuineRefreshToken(newAccessTokenResponse.refreshToken);
     console.log('Stored new refresh token as repo secret.');
     return newAccessTokenResponse.accessToken;
