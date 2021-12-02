@@ -31,8 +31,8 @@ export declare class Auth0Auth {
     getUserInfo(bearerToken: string): Promise<IAuth0UserInfo>;
     requestDeviceCode(): Promise<IReqDeviceCodeResponse>;
     requestDeviceActivation(verificationURI: string, userCode: string, prePopulatedCodeURI: string): Promise<void>;
-    requestTokens(deviceCode: string): Promise<IAuth0TokensResponse | null>;
+    requestTokens(deviceCode: string, activationLink: string): Promise<IAuth0TokensResponse | null>;
     exchangeRefreshTokenForAccessToken(refreshToken: string): Promise<IAuth0TokensResponse>;
-    pollForTokens(deviceCode: string, expiresIn: number, tokenPollingIntervalSeconds: number): Promise<IAuth0TokensResponse>;
+    pollForTokens(deviceCode: string, activationLink: string, expiresIn: number, tokenPollingIntervalSeconds: number): Promise<IAuth0TokensResponse>;
 }
 export {};
