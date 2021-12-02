@@ -68,7 +68,7 @@ export class Authentication {
     } = await this.auth0Auth.requestDeviceCode();
     // this.tokenPollingInterval = interval;
     await this.auth0Auth.requestDeviceActivation(verificationURI, userCode, verificationUriComplete);
-    const newAccessTokenResponse = await this.auth0Auth.pollForTokens(deviceCode, expiresIn, interval);
+    const newAccessTokenResponse = await this.auth0Auth.pollForTokens(deviceCode, verificationUriComplete, expiresIn, interval);
     console.log('Fetched new access token.');
     if (!newAccessTokenResponse) {
       throw new Error('Device authorization code expired. Please run the action again.');

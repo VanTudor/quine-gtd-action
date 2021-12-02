@@ -120,8 +120,8 @@ export class Auth0Auth {
      console.log(`Or go to ${verificationURI} and type in the following code: ${userCode}`);
   }
 
-  public async requestTokens(deviceCode: string): Promise<IAuth0TokensResponse | null> {
-    console.debug("Getting request tokens...");
+  public async requestTokens(deviceCode: string, activationLink: string): Promise<IAuth0TokensResponse | null> {
+    console.debug("Checking if authorisation flow is complete...");
     const params = new URLSearchParams();
     params.append('grant_type', 'urn:ietf:params:oauth:grant-type:device_code');
     params.append('device_code', deviceCode);
@@ -129,14 +129,15 @@ export class Auth0Auth {
 
     const response = await fetch(config.tokenURI, { method: 'POST', body: params });
     const res = await response.json();
-    console.log("Finished getting request tokens.");
     if (res.access_token) {
+      console.debug("Authorisation flow complete!");
       return {
         refreshToken: res.refresh_token,
         accessToken: res.access_token,
         expiresIn: res.expires_in,
       }
     }
+    console.log(`Authorisation flow not completed. Go to ${activationLink}.`);
     return null;
   }
 
@@ -148,12 +149,12 @@ export class Auth0Auth {
     };
   }
 
-  public async pollForTokens(deviceCode: string, expiresIn: number, tokenPollingIntervalSeconds: number): Promise<IAuth0TokensResponse> {
+  public async pollForTokens(deviceCode: string, activationLink: string, expiresIn: number, tokenPollingIntervalSeconds: number): Promise<IAuth0TokensResponse> {
     if (tokenPollingIntervalSeconds) {
       const res = await pollUntil<IAuth0TokensResponse | null>(
         expiresIn * 1000,
         tokenPollingIntervalSeconds * 1000,
-        () => this.requestTokens(deviceCode),
+        () => this.requestTokens(deviceCode, activationLink),
         (res) => res !== null
       );
       if (res !== null) {
