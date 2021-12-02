@@ -85,7 +85,7 @@ export class GitHubInteraction {
       
       ### Check out these repos recommended by (Quine)[${config.quineURLs.feRoot}]:
       ${recommendations.map(rec => {
-        return '\n- (' + rec.name_with_owner + ')[https://test.com/' + rec.id + ']';
+        return '\n- (' + rec.name_with_owner + ')[' + config.quineURLs.feRoot +'/' + rec.id + ']';
     })}
       `;
 

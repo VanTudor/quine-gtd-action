@@ -4,7 +4,7 @@ import { decodeJWT, pollUntil } from "./utils";
 
 export class Authentication {
   public auth0Auth: Auth0Auth;
-  private gitHubInteraction: GitHubInteraction;
+  public gitHubInteraction: GitHubInteraction;
 
   constructor() {
     this.auth0Auth = new Auth0Auth();
