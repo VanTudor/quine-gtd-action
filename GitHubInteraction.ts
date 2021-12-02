@@ -1,6 +1,8 @@
 import * as github from '@actions/github';
 import { encryptGHSecret } from "./utils";
 import { getInput } from "@actions/core";
+import { config } from "./config";
+import { IRepoInfo } from "./QuineAPI";
 
 export class GitHubInteraction {
   public static quineAccessTokenSecretName: string = 'QUINE_ACCESS_TOKEN';
@@ -8,6 +10,7 @@ export class GitHubInteraction {
   private octokit;
   private readonly owner: string;
   private readonly repo: string;
+  private readonly currentDayIssue: number;
   private repoPublicKey?: string;
   private repoPublicKeyID?: string;
   public initiated: boolean;
@@ -16,6 +19,7 @@ export class GitHubInteraction {
     this.initiated = false;
     const slug = process.env.GITHUB_REPOSITORY || "VanTudor/gtd";
     const [owner, repo] = slug.split('/');
+    this.currentDayIssue = parseInt((getInput('today') || process.env.GTD_TODAY)!);
     if (!owner || !repo) {
       throw new Error('Cannot interact with GitHub. Missing owner and repo params.');
     }
@@ -69,12 +73,27 @@ export class GitHubInteraction {
     throw new Error('No repo public key id could be found. Possible misuse of this method. Did you forget to run GitHubInteraction.init()?')
   }
 
-  // public async postComment(commentText: string) {
-  //   const new_comment = await octokit.rest.issues.createComment({
-  //     owner: this.owner,
-  //     repo: this.repo,
-  //     issue_number: today,
-  //     body: comment.body ?? '',
-  //   });
-  // }
+  public async updateTicket(recommendations: IRepoInfo[]) {
+    let body = await this.octokit.rest.issues.get({
+      owner: this.owner,
+      repo: this.repo,
+      issue_number: this.currentDayIssue
+    }).then(x => x.data.body);
+
+    body = `
+      ${body}
+      
+      ### Check out these repos recommended by (Quine)[${config.quineURLs.feRoot}]:
+      ${recommendations.map(rec => {
+        return '\n- (' + rec.name_with_owner + ')[https://test.com/' + rec.id + ']';
+    })}
+      `;
+
+    await this.octokit.rest.issues.update({
+      owner: this.owner,
+      repo: this.repo,
+      issue_number: this.currentDayIssue,
+      body
+    })
+  }
 }

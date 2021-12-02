@@ -1,6 +1,11 @@
 const prodAuth0Hostname = 'https://quine.eu.auth0.com';
 const devAuth0Hostname = 'https://dev-6efvmm67.eu.auth0.com';
 
+const devAPIURL = 'https://cosmos-dev.quine.sh/api';
+const prodAPIURL = 'https://cosmos.quine.sh/api';
+const devFERoot = 'https://scout-dev.quine.sh';
+const prodFERoot = 'https://scout.quine.sh';
+
 export const prodConfig = {
   userInfoEndpoint: `${devAuth0Hostname}/userinfo`,
   tokenEndpoint: '/oauth/token',
@@ -9,6 +14,20 @@ export const prodConfig = {
   auth0ClientId: 'WhITauwih53wi382lP0wxh9f7RPQQKGR',
   deviceActivationURI: `${prodAuth0Hostname}/oauth/device/code`,
   audience: `${prodAuth0Hostname}/api/v2/`,
+  quineURLs: {
+    feRoot: prodFERoot,
+    cosmos: {
+      user : {
+        register: `${devAPIURL}/cosmos/user/register/`
+      },
+    },
+    scout :{
+      recommendation: `${devAPIURL}/scout/recommendation/`,
+      repositories: {
+        cardInfo: `${devAPIURL}/scout/repositories/card-info/`,
+      },
+    }
+  }
 };
 
 export const devConfig = {
@@ -19,6 +38,20 @@ export const devConfig = {
   auth0ClientId: 'QNWUQQvFoW8F5hQberf7jbxnOGBCci0O',
   deviceActivationURI: `${devAuth0Hostname}/oauth/device/code`,
   audience: `${devAuth0Hostname}/api/v2/`,
+  quineURLs: {
+    feRoot: devFERoot,
+    cosmos: {
+      user : {
+        register: `${prodAPIURL}/cosmos/user/register/`
+      },
+    },
+    scout :{
+      recommendation: `${prodAPIURL}/scout/recommendation/`,
+      repositories: {
+        cardInfo: `${prodAPIURL}/scout/repositories/card-info/`,
+      },
+    }
+  }
 };
 
-export const config = devConfig;
+export const config = prodConfig;

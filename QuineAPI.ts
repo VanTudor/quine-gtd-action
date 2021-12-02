@@ -1,5 +1,6 @@
 import { IAuth0UserInfo } from "./Auth0Auth";
 import dayjs from "dayjs";
+import { config } from "./config";
 
 export interface IQuineRegisterUserResponse {
   id: string;
@@ -47,8 +48,7 @@ export class QuineAPI {
   constructor(private bearerToken: string, private auth0UserInfo: IAuth0UserInfo) {}
 
   public async getQuineUserId(): Promise<string> {
-    const url ='https://cosmos-dev.quine.sh/api/cosmos/user/register/';
-    const response = await fetch(url, {
+    const response = await fetch(config.quineURLs.cosmos.user.register, {
       method: 'POST',
       headers: this.getHeaders(true),
       body: JSON.stringify({
@@ -76,8 +76,7 @@ export class QuineAPI {
     return r.id;
   }
   public async getRepoRecommendationGroups(userId: number) {
-    const url = 'https://cosmos-dev.quine.sh/api/scout/recommendation/';
-    const res = await fetch(url, {
+    const res = await fetch(config.quineURLs.scout.recommendation, {
       method: 'PUT',
       headehrs: this.getHeaders(true),
       body: JSON.stringify({
@@ -87,8 +86,7 @@ export class QuineAPI {
   }
 
   public async getRepoRecommendations(userId: number, recommendationGroups: { group: string }[]): Promise<IRepoRecommendationGroup[]> {
-    const url = 'https://cosmos-dev.quine.sh/api/scout/recommendation/';
-    const res = await fetch(url, {
+    const res = await fetch(config.quineURLs.scout.recommendation, {
       method: 'PUT',
       headers: this.getHeaders(true),
       body: JSON.stringify({
@@ -104,8 +102,7 @@ export class QuineAPI {
   }
 
   public async getReposInfo(userId: number, repoIds: number[]): Promise<IRepoInfo[]> {
-    const url = 'https://cosmos-dev.quine.sh/api/scout/repositories/card-info/';
-    const res = await fetch(url, {
+    const res = await fetch(config.quineURLs.scout.repositories.cardInfo, {
       method: 'PUT',
       headers: this.getHeaders(true),
       body: JSON.stringify({
