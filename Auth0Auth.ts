@@ -152,25 +152,3 @@ export class Auth0Auth {
   }
 }
 
-async function main() {
-  // const params = new URLSearchParams();
-  // params.append('client_id', auth0ClientId);
-  // params.append('scope', '');
-  // params.append('audience', auth0Domain);
-  // --header 'content-type: application/x-www-form-urlencoded' \
-  // --data 'client_id=BqBM24jGs8139h4Pw9x3y9YZ6D7rDJb2' \
-  // --data scope=SCOPE \
-  // --data audience=AUDIENCE
-  // const response = await fetch(deviceActivationURI, { method: 'POST', body: params });
-  // const data = await response.json();
-  // console.log(JSON.stringify(data));
-
-  // const res = await requestDeviceCode();
-  // requestDeviceActivation(res.verificationURI, res.userCode);
-
-  // console.log('mock token: ', token);
-
-}
-
-
-main();

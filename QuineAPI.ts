@@ -67,11 +67,11 @@ export class QuineAPI {
         ],
       }),
     });
-    console.log("AICISA:");
-    console.log(response);
+    // console.log("AICISA:");
+    // console.log(response);
     const r = await response.json();
-    console.log(r);
-    console.log("AICISA:");
+    // console.log(r);
+    // console.log("AICISA:");
     // return (await response.json() as IQuineRegisterUserResponse).id;
     return r.id;
   }
@@ -96,8 +96,8 @@ export class QuineAPI {
       })
     });
     const k = await res.json();
-    console.log(JSON.stringify(k));
-    console.log('------------------------getRepoRecommendations------------------------');
+    // console.log(JSON.stringify(k));
+    // console.log('------------------------getRepoRecommendations------------------------');
     return k.recommendations;
   }
 
@@ -111,8 +111,8 @@ export class QuineAPI {
       })
     });
     const k = await res.json();
-    console.log(JSON.stringify(k));
-    console.log('------------------------getReposInfo------------------------');
+    // console.log(JSON.stringify(k));
+    // console.log('------------------------getReposInfo------------------------');
     return k.repo_cards;
   }
 

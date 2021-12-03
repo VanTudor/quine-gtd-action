@@ -7,7 +7,7 @@ description: |
   based on your previous GitHub activity
 inputs:
   publish-in:
-    description: "Tells the action where to publish your repo recommendations. Valid: `separate-ticket` and `porter-ticket`. Default: `porter-ticket`"
+    description: "Tells the action where to publish your repo recommendations. Valid: `separate-issue` and `porter-issue`. Default: `porter-issue`"
     required: false
   run-cron:
     description: "A cron schedule expression that tells the action when to publish your recommended repos."

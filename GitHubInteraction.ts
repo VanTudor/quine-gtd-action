@@ -85,7 +85,7 @@ ${recommendations.map(rec => {
     await this.octokit.rest.issues.create({
       owner: this.owner,
       repo: this.repo,
-      title: `${date} Personalised repo recommendations by Quine.`,
+      title: `${date}. Personalised repo recommendations by Quine.`,
       body
     })
   }

@@ -21,10 +21,10 @@ async function action(publishIn?: string){
   console.log(JSON.stringify(repoDetails));
   console.log("PUBLISH IN VALUE: ", publishIn);
   switch(publishIn) {
-    case "porter-ticket":
+    case "porter-issue":
       await auth.gitHubInteraction.updateTicket(repoDetails);
       break;
-    case "separate-ticket":
+    case "separate-issue":
       await auth.gitHubInteraction.createTicket(repoDetails);
       break;
     default:

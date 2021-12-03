@@ -1,6 +1,6 @@
 import { Auth0Auth, TAccessToken } from "./Auth0Auth";
 import { GitHubInteraction } from "./GitHubInteraction";
-import { decodeJWT, pollUntil } from "./utils";
+import { decodeJWT } from "./utils";
 
 export class Authentication {
   public auth0Auth: Auth0Auth;
